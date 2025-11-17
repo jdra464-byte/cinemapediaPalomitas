@@ -53,7 +53,7 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCztIHJqA5lQYY67K1EsDBfQAi1wzNjSvg',
+    apiKey: const String.fromEnvironment('FIREBASE_API_KEY'),
     appId: '1:55477305216:android:f5a98023743e6fcb594b65',
     messagingSenderId: '55477305216',
     projectId: 'cinemapedia-c4495',

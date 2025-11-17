@@ -12,7 +12,12 @@
           "package_name": "com.example.cinemapedia"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "55477305216-s5rlptcgqpou2a72thapjkm64f87o9il.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCztIHJqA5lQYY67K1EsDBfQAi1wzNjSvg"
@@ -20,7 +25,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "55477305216-s5rlptcgqpou2a72thapjkm64f87o9il.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
