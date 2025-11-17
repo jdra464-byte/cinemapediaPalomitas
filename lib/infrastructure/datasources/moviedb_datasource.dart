@@ -1,7 +1,9 @@
 import 'package:cinemapedia/config/constants/environment.dart';
 import 'package:cinemapedia/domain/datasources/movies_datasource.dart';
+import 'package:cinemapedia/domain/entities/actor.dart';
 import 'package:cinemapedia/domain/entities/movies.dart';
 import 'package:cinemapedia/infrastructure/mappers/movie_mapper.dart';
+import 'package:cinemapedia/infrastructure/models/moviedb/movie_credits.dart';
 import 'package:cinemapedia/infrastructure/models/moviedb/movie_details.dart';
 import 'package:cinemapedia/infrastructure/models/moviedb/moviedb_response.dart';
 import 'package:dio/dio.dart';
@@ -79,4 +81,29 @@ class MoviedbDatasource extends MoviesDatasource {
 
     return movie;
   }
+
+  @override
+  Future<List<Actor>> getMovieCast(String movieId) async {
+    final response = await dio.get('/movie/$movieId/credits');
+    
+    if (response.statusCode != 200) {
+      throw Exception('Error al obtener el reparto');
+    }
+
+    final movieCredits = MovieCredits.fromJson(response.data);
+    
+    final List<Actor> actors = movieCredits.cast
+        .take(10)
+        .map((actor) => Actor(
+              id: actor.id,
+              name: actor.name,
+              character: actor.character,
+              profilePath: actor.profilePath,
+            ))
+        .toList();
+
+    return actors;
+  }
 }
+
+

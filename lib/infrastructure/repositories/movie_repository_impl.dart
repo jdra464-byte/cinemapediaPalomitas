@@ -1,4 +1,5 @@
 import 'package:cinemapedia/domain/datasources/movies_datasource.dart';
+import 'package:cinemapedia/domain/entities/actor.dart';
 import 'package:cinemapedia/domain/entities/movies.dart';
 import 'package:cinemapedia/domain/repositories/movies_repository.dart';
 
@@ -31,4 +32,10 @@ class MovieRepositoryImpl extends MoviesRepository {
   Future<Movie> getMovieById(String id) {
     return datasource.getMovieById(id);
   }
+
+   @override
+  Future<List<Actor>> getMovieCast(String movieId) {
+    return datasource.getMovieCast(movieId);
+  }
+  
 }
