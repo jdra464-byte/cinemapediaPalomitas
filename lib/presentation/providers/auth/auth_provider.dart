@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
+import 'package:go_router/go_router.dart';
 
 final authStateProvider = StreamProvider<User?>((ref) {
   return FirebaseAuth.instance.authStateChanges();
@@ -27,7 +29,7 @@ class AuthState {
 class AuthNotifier extends StateNotifier<AuthState> {
   AuthNotifier() : super(AuthState());
 
-  Future<void> signInWithEmailAndPassword(String email, String password) async {
+  Future<void> signInWithEmailAndPassword(String email, String password, BuildContext context) async {
     try {
       state = state.copyWith(isLoading: true, errorMessage: null);
       await FirebaseAuth.instance.signInWithEmailAndPassword(
@@ -35,6 +37,11 @@ class AuthNotifier extends StateNotifier<AuthState> {
         password: password,
       );
       state = state.copyWith(isLoading: false);
+      
+      // Redirigir automáticamente después del login exitoso
+      if (context.mounted) {
+        context.go('/');
+      }
     } on FirebaseAuthException catch (e) {
       state = state.copyWith(
         isLoading: false,
@@ -43,7 +50,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
     }
   }
 
-  Future<void> signUpWithEmailAndPassword(String email, String password) async {
+  Future<void> signUpWithEmailAndPassword(String email, String password, BuildContext context) async {
     try {
       state = state.copyWith(isLoading: true, errorMessage: null);
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
@@ -51,6 +58,11 @@ class AuthNotifier extends StateNotifier<AuthState> {
         password: password,
       );
       state = state.copyWith(isLoading: false);
+      
+      // Redirigir automáticamente después del registro exitoso
+      if (context.mounted) {
+        context.go('/');
+      }
     } on FirebaseAuthException catch (e) {
       state = state.copyWith(
         isLoading: false,
@@ -60,7 +72,12 @@ class AuthNotifier extends StateNotifier<AuthState> {
   }
 
   Future<void> signOut() async {
-    await FirebaseAuth.instance.signOut();
+    try {
+      await FirebaseAuth.instance.signOut();
+      // No necesitas redirigir aquí, el router se encargará automáticamente
+    } catch (e) {
+      print('Error al cerrar sesión: $e');
+    }
   }
 
   String _getErrorMessage(String code) {

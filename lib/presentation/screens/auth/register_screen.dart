@@ -33,6 +33,7 @@ class RegisterScreenState extends ConsumerState<RegisterScreen> {
       ref.read(authProvider.notifier).signUpWithEmailAndPassword(
         _emailController.text.trim(),
         _passwordController.text.trim(),
+        context,
       );
     }
   }

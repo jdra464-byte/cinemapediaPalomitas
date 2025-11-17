@@ -31,6 +31,7 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
       ref.read(authProvider.notifier).signInWithEmailAndPassword(
         _emailController.text.trim(),
         _passwordController.text.trim(),
+        context,
       );
     }
   }

@@ -1,8 +1,7 @@
-import 'package:cinemapedia/presentation/screens/auth/login_screen.dart';
-import 'package:cinemapedia/presentation/screens/auth/register_screen.dart';
-import 'package:cinemapedia/presentation/screens/movies/home_screen.dart';
-import 'package:cinemapedia/presentation/screens/movies/movie_screen.dart';
+import 'dart:async';
+import 'package:cinemapedia/presentation/screens/screens.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 final appRouter = GoRouter(
@@ -35,16 +34,38 @@ final appRouter = GoRouter(
   redirect: (context, state) {
     final user = FirebaseAuth.instance.currentUser;
     final isAuthenticated = user != null;
-    final isAuthRoute = state.uri.toString() == '/login' || state.uri.toString() == '/register';
+    final isAuthRoute = state.uri.path == '/login' || state.uri.path == '/register';
     
+    // Si NO está autenticado y NO está en una ruta de auth -> redirigir a login
     if (!isAuthenticated && !isAuthRoute) {
       return '/login';
     }
     
+    // Si ESTÁ autenticado y ESTÁ en una ruta de auth -> redirigir a home
     if (isAuthenticated && isAuthRoute) {
       return '/';
     }
     
+    // No redirigir en otros casos
     return null;
   },
+  refreshListenable: GoRouterRefreshStream(FirebaseAuth.instance.authStateChanges()) as Listenable,
 );
+
+// Clase helper para escuchar cambios en el estado de autenticación
+class GoRouterRefreshStream extends ChangeNotifier {
+  GoRouterRefreshStream(Stream<dynamic> stream) {
+    notifyListeners();
+    _subscription = stream.asBroadcastStream().listen(
+          (dynamic _) => notifyListeners(),
+        );
+  }
+
+  late final StreamSubscription<dynamic> _subscription;
+
+  @override
+  void dispose() {
+    _subscription.cancel();
+    super.dispose();
+  }
+}
