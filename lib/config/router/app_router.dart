@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:cinemapedia/presentation/screens/movies/search_screen.dart';
 import 'package:cinemapedia/presentation/screens/screens.dart';
+import 'package:cinemapedia/presentation/screens/movies/categories_screen.dart'; // ✅ NUEVO
+import 'package:cinemapedia/presentation/screens/movies/movies_by_genre_screen.dart'; // ✅ NUEVO
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -31,15 +33,31 @@ final appRouter = GoRouter(
       name: RegisterScreen.name,
       builder: (context, state) => RegisterScreen(),
     ),
-     GoRoute(
+    GoRoute(
       path: '/search',
       name: SearchScreen.name,
       builder: (context, state) => SearchScreen(),
     ),
+    // ✅ NUEVAS RUTAS AGREGADAS
+    GoRoute(
+      path: '/categories',
+      name: CategoriesScreen.name,
+      builder: (context, state) => CategoriesScreen(),
+    ),
+    GoRoute(
+      path: '/genre/:id',
+      name: MoviesByGenreScreen.name,
+      builder: (context, state) {
+        final genreId = int.parse(state.pathParameters['id'] ?? '0');
+        final genreName = state.extra as String? ?? 'Género';
+        return MoviesByGenreScreen(
+          genreId: genreId,
+          genreName: genreName,
+        );
+      },
+    ),
   ],
 
-
-  
   redirect: (context, state) {
     final user = FirebaseAuth.instance.currentUser;
     final isAuthenticated = user != null;

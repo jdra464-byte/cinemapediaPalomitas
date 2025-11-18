@@ -3,9 +3,11 @@ import 'package:cinemapedia/domain/datasources/movies_datasource.dart';
 import 'package:cinemapedia/domain/entities/actor.dart';
 import 'package:cinemapedia/domain/entities/movies.dart';
 import 'package:cinemapedia/domain/entities/search_result.dart';
+import 'package:cinemapedia/domain/entities/genre.dart';
 import 'package:cinemapedia/infrastructure/mappers/movie_mapper.dart';
+import 'package:cinemapedia/infrastructure/models/moviedb/genres_response.dart';
 import 'package:cinemapedia/infrastructure/models/moviedb/movie_credits.dart';
-import 'package:cinemapedia/infrastructure/models/moviedb/movie_details.dart';
+import 'package:cinemapedia/infrastructure/models/moviedb/movie_details.dart' as movie_details; // ✅ ALIAS
 import 'package:cinemapedia/infrastructure/models/moviedb/moviedb_response.dart';
 import 'package:cinemapedia/infrastructure/models/moviedb/search_response.dart';
 import 'package:dio/dio.dart';
@@ -77,7 +79,7 @@ class MoviedbDatasource extends MoviesDatasource {
     if (response.statusCode != 200)
       throw Exception('Movie with id: $id not found');
 
-    final movieDetails = MovieDetails.fromJson(response.data);
+    final movieDetails = movie_details.MovieDetails.fromJson(response.data); // ✅ USAR ALIAS
 
     final movie = MovieMapper.movieDetailsToEntity(movieDetails);
 
@@ -106,7 +108,8 @@ class MoviedbDatasource extends MoviesDatasource {
 
     return actors;
   }
- @override
+
+  @override
   Future<List<SearchResult>> searchMovies(String query, {int page = 1}) async {
     if (query.isEmpty) return [];
 
@@ -125,7 +128,6 @@ class MoviedbDatasource extends MoviesDatasource {
 
     final searchResponse = SearchResponse.fromJson(response.data);
     
-    // Filtrar solo películas y series (excluir personas por ahora)
     final List<SearchResult> results = searchResponse.results
         .where((item) => item.mediaType == 'movie' || item.mediaType == 'tv')
         .map((item) => SearchResult(
@@ -142,7 +144,42 @@ class MoviedbDatasource extends MoviesDatasource {
 
     return results;
   }
+
+  @override
+  Future<List<Genre>> getMovieGenres() async {
+    final response = await dio.get('/genre/movie/list');
+
+    if (response.statusCode != 200) {
+      throw Exception('Error al obtener géneros');
+    }
+
+    final genresResponse = GenresResponse.fromJson(response.data);
+    
+    final List<Genre> genres = genresResponse.genres
+        .map((genre) => Genre(
+              id: genre.id,
+              name: genre.name,
+            ))
+        .toList();
+
+    return genres;
+  }
+
+  @override
+  Future<List<Movie>> getMoviesByGenre(int genreId, {int page = 1}) async {
+    final response = await dio.get(
+      '/discover/movie',
+      queryParameters: {
+        'with_genres': genreId,
+        'page': page,
+        'sort_by': 'popularity.desc',
+      },
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Error al obtener películas del género');
+    }
+
+    return _jsonToMovies(response.data);
+  }
 }
-
-
-

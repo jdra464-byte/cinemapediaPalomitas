@@ -66,6 +66,9 @@ class _AuthenticatedBottomBar extends ConsumerWidget {
         ),
       ],
       onTap: (index) {
+        if (index == 1) { // Índice de "Categorias"
+          context.push('/categories');
+        }
         if (index == 3) { // Índice del item "Mi Perfil"
           _showProfileMenu(context, ref);
         }

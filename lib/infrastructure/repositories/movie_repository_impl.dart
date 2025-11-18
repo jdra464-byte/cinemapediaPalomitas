@@ -3,6 +3,7 @@ import 'package:cinemapedia/domain/entities/actor.dart';
 import 'package:cinemapedia/domain/entities/movies.dart';
 import 'package:cinemapedia/domain/entities/search_result.dart';
 import 'package:cinemapedia/domain/repositories/movies_repository.dart';
+import '../../domain/entities/genre.dart'; 
 
 class MovieRepositoryImpl extends MoviesRepository {
   final MoviesDatasource datasource;
@@ -41,5 +42,16 @@ class MovieRepositoryImpl extends MoviesRepository {
    @override
   Future<List<SearchResult>> searchMovies(String query, {int page = 1}) {
     return datasource.searchMovies(query, page: page);
+  }
+    // ✅ NUEVO: Obtener géneros
+  @override
+  Future<List<Genre>> getMovieGenres() {
+    return datasource.getMovieGenres();
+  }
+
+  // ✅ NUEVO: Obtener películas por género
+  @override
+  Future<List<Movie>> getMoviesByGenre(int genreId, {int page = 1}) {
+    return datasource.getMoviesByGenre(genreId, page: page);
   }
 }
