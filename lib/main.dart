@@ -7,23 +7,30 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-// En lib/main.dart
-
-void main() async {
-
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-   await dotenv.load(fileName: ".env");
-  
-  // ✅ BLOQUE DE PROTECCIÓN: Solo inicializa si no hay apps creadas
-  if (Firebase.apps.isEmpty) {
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
+ 
+  await dotenv.load(fileName: ".env");
+
+  //  Inicialización de Firebase 
+  try {
+    if (Firebase.apps.isEmpty) {
+      await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      );
+      print("✅ Firebase inicializado correctamente");
+    } else {
+      print("ℹ️ Firebase ya estaba inicializado");
+    }
+  } catch (e) {
+    // Si falla 
+    print("⚠️ Error controlado de Firebase (La app continuará): $e");
   }
 
+  //  Arrancar la App
   runApp(
-    ProviderScope(child: MainApp())
+    const ProviderScope(child: MainApp())
   );
 }
 

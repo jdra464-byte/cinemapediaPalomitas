@@ -4,7 +4,6 @@ import 'package:cinemapedia/domain/entities/comment.dart';
 class CommentsRepositoryImpl {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  // Obtener comentarios de una película en tiempo real
   Stream<List<Comment>> getCommentsByMovie(String movieId) {
     return _firestore
         .collection('comments')
@@ -17,24 +16,29 @@ class CommentsRepositoryImpl {
                 id: doc.id,
                 movieId: data['movieId'],
                 userId: data['userId'],
-                userName: data['userName'],
+                userName: data['userName'] ?? 'Usuario',
+                userEmail: data['userEmail'],          
+                userPhotoUrl: data['userPhotoUrl'],    
                 text: data['text'],
                 timestamp: (data['timestamp'] as Timestamp).toDate(),
               );
             }).toList());
   }
 
-  // Agregar un nuevo comentario
   Future<void> addComment({
     required String movieId,
     required String userId,
     required String userName,
+    String? userEmail,       
+    String? userPhotoUrl,    
     required String text,
   }) async {
     await _firestore.collection('comments').add({
       'movieId': movieId,
       'userId': userId,
       'userName': userName,
+      'userEmail': userEmail,       
+      'userPhotoUrl': userPhotoUrl, 
       'text': text,
       'timestamp': FieldValue.serverTimestamp(),
     });
