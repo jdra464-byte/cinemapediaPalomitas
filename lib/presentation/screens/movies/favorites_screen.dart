@@ -20,32 +20,40 @@ class FavoritesScreenState extends ConsumerState<FavoritesScreen> {
   @override
   void initState() {
     super.initState();
-    // La carga inicial se maneja en didChangeDependencies
+    // No llamamos a la carga aquí para evitar conflictos.
   }
 
-  // ✅ Se ejecuta cuando la pantalla recibe el foco (ej: al volver de Detalles)
+  // ✅ SOLUCIÓN CRÍTICA: Deferir la acción de carga para que ocurra después del build.
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _refreshAndLoad();
+    
+    // Esto asegura que la acción se ejecute después del primer frame y cada vez que
+    // la pantalla reciba el foco (al navegar de vuelta desde MovieScreen).
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _refreshAndLoad();
+    });
   }
 
   void _refreshAndLoad() async {
+    // Si la pantalla ya está en proceso de carga, salimos.
     if (isLoading) return;
     
+    // Ponemos el loader y notificamos a la UI
     isLoading = true;
-    setState(() {}); // Muestra loading si es necesario
+    setState(() {}); 
 
-    // 1. Refrescamos el provider (esto es void)
-    await ref.read(favoriteMoviesProvider.notifier).refreshFavorites();
-    
-    // 2. ✅ ARREGLO DEL ERROR VOID: Leemos el estado actualizado directamente
-    final movies = ref.read(favoriteMoviesProvider);
+    // 1. Forzamos el refresh que limpia el Notifier y hace la consulta a Firebase
+    final notifier = ref.read(favoriteMoviesProvider.notifier);
+    await notifier.refreshFavorites(); 
     
     if (mounted) {
+      // 2. Verificamos el resultado del estado
+      final favoriteMovies = ref.read(favoriteMoviesProvider);
+      
       isLoading = false;
-      isLastPage = movies.isEmpty;
-      setState(() {});
+      isLastPage = favoriteMovies.isEmpty;
+      setState(() {}); // Forzamos el rebuild final con la data
     }
   }
 
@@ -53,7 +61,7 @@ class FavoritesScreenState extends ConsumerState<FavoritesScreen> {
     if (isLoading || isLastPage) return;
     
     isLoading = true;
-    // loadNextPage SÍ devuelve una lista, así que esto es seguro
+    // loadNextPage retorna la lista de nuevas películas, que usamos para verificar el final
     final movies = await ref.read(favoriteMoviesProvider.notifier).loadNextPage();
     isLoading = false;
 
@@ -63,6 +71,7 @@ class FavoritesScreenState extends ConsumerState<FavoritesScreen> {
     if (mounted) setState(() {});
   }
 
+  // ... (El resto del código del EmptyState sigue igual) ...
   Widget _buildEmptyState(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     return Center(
@@ -102,7 +111,6 @@ class FavoritesScreenState extends ConsumerState<FavoritesScreen> {
       appBar: AppBar(
         title: const Text('Mis Favoritos'),
         centerTitle: true,
-        // ✅ Flecha de regreso
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new), 
           onPressed: () => context.go('/'),

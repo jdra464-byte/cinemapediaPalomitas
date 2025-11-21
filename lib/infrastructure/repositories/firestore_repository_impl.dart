@@ -10,11 +10,11 @@ class FirestoreRepositoryImpl extends LocalStorageRepository {
   // Helper para obtener la colección del usuario actual
   CollectionReference get _favoritesCollection {
     final uid = _auth.currentUser?.uid;
-    // Si no hay usuario, retornamos una referencia segura o lanzamos error controlado
+    // Si no hay usuario, lanzamos error controlado (aunque el router lo debe evitar)
     if (uid == null) throw Exception('Usuario no logueado');
     return _firestore.collection('users').doc(uid).collection('favorites');
   }
-
+  
   @override
   Future<bool> isMovieFavorite(int movieId) async {
     try {
@@ -34,10 +34,8 @@ class FirestoreRepositoryImpl extends LocalStorageRepository {
     final doc = await docRef.get();
 
     if (doc.exists) {
-      // Borrar
       await docRef.delete();
     } else {
-      // Crear
       await docRef.set({
         'id': movie.id,
         'title': movie.title,
@@ -61,7 +59,6 @@ class FirestoreRepositoryImpl extends LocalStorageRepository {
   @override
   Future<List<Movie>> loadMovies({int limit = 10, offset = 0}) async {
     try {
-      // 1. Intentamos obtener los datos
       final snapshot = await _favoritesCollection
           .orderBy('timestamp', descending: true)
           .limit(limit)
@@ -70,45 +67,34 @@ class FirestoreRepositoryImpl extends LocalStorageRepository {
       final List<Movie> movies = [];
 
       for (final doc in snapshot.docs) {
-        try {
-          // 2. Convertimos los datos de forma SEGURA
-          final data = doc.data() as Map<String, dynamic>;
+        final data = doc.data() as Map<String, dynamic>;
 
-          // Validación mínima: Si no tiene título o path, no sirve.
-          if (data['title'] == null || data['posterPath'] == null) continue;
-
-          movies.add(Movie(
-            adult: data['isAdult'] ?? false,
-            backdropPath: data['backdropPath'] ?? '',
-            // Convertimos la lista de géneros a String de forma segura
-            genreIds: (data['genreIds'] as List<dynamic>?)
-                    ?.map((e) => e.toString())
-                    .toList() ?? [],
-            id: data['id'] ?? 0,
-            originalLanguage: data['originalLanguage'] ?? '',
-            originalTitle: data['originalTitle'] ?? '',
-            overview: data['overview'] ?? '',
-            // 🔥 EL ARREGLO MÁGICO: (as num?)?.toDouble()
-            // Esto evita el crash por "int is not subtype of double"
-            popularity: (data['popularity'] as num?)?.toDouble() ?? 0.0,
-            posterPath: data['posterPath'] ?? '',
-            releaseDate: DateTime.tryParse(data['releaseDate'] ?? '') ?? DateTime.now(),
-            title: data['title'] ?? 'Sin Título',
-            video: data['video'] ?? false,
-            // 🔥 AQUÍ TAMBIÉN
-            voteAverage: (data['voteAverage'] as num?)?.toDouble() ?? 0.0,
-            voteCount: (data['voteCount'] as num?)?.toInt() ?? 0,
-          ));
-        } catch (e) {
-          // Si UNA película falla, la imprimimos en consola pero NO rompemos la app
-          print("⚠️ Error al leer una película: $e");
-        }
+        // 🛡️ Mapeo con conversión de tipos blindada
+        movies.add(Movie(
+          adult: data['isAdult'] ?? false,
+          backdropPath: data['backdropPath'] ?? '',
+          genreIds: List<String>.from(data['genreIds']?.map((e) => e.toString()) ?? []),
+          id: data['id'] ?? 0,
+          originalLanguage: data['originalLanguage'] ?? '',
+          originalTitle: data['originalTitle'] ?? '',
+          overview: data['overview'] ?? '',
+          // 🔥 ARREGLO 1: Acepta int o double y lo convierte a double
+          popularity: (data['popularity'] as num?)?.toDouble() ?? 0.0,
+          posterPath: data['posterPath'] ?? '',
+          releaseDate: DateTime.tryParse(data['releaseDate'] ?? '') ?? DateTime.now(),
+          title: data['title'] ?? 'Sin Título',
+          video: data['video'] ?? false,
+          // 🔥 ARREGLO 2: Acepta int o double y lo convierte a double
+          voteAverage: (data['voteAverage'] as num?)?.toDouble() ?? 0.0,
+          voteCount: (data['voteCount'] as num?)?.toInt() ?? 0,
+        ));
       }
       return movies;
 
     } catch (e) {
       print("❌ Error general al cargar favoritos: $e");
-      return []; // Retornamos lista vacía en vez de romper todo
+      // Si falla, al menos la app no se crashea y muestra una lista vacía
+      return []; 
     }
   }
 }
