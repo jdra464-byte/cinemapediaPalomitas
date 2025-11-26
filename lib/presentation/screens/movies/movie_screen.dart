@@ -1,5 +1,4 @@
 import 'package:cinemapedia/domain/entities/movies.dart';
-<<<<<<< HEAD
 import 'package:cinemapedia/domain/entities/actor.dart';
 import 'package:cinemapedia/presentation/providers/movies/movie_videos_provider.dart';
 import 'package:cinemapedia/presentation/providers/movies/movie_info_provider.dart';
@@ -9,15 +8,6 @@ import 'package:cinemapedia/presentation/widgets/movies/comments_section.dart';
 import 'package:cinemapedia/presentation/providers/storage/favorite_movies_provider.dart';
 import 'package:cinemapedia/presentation/providers/storage/favorite_list_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
-=======
-import 'package:cinemapedia/domain/entities/actor.dart'; 
-import 'package:cinemapedia/presentation/providers/movies/movie_info_provider.dart';
-import 'package:cinemapedia/presentation/providers/movies/movie_cast_provider.dart';
-import 'package:cinemapedia/presentation/widgets/movies/comments_section.dart';
-import 'package:cinemapedia/presentation/providers/storage/favorite_movies_provider.dart'; 
-import 'package:cinemapedia/presentation/providers/storage/favorite_list_provider.dart';
-
->>>>>>> 12b3c65bda40581d2e39efcf101d45728f67431b
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -36,7 +26,6 @@ class MovieScreenState extends ConsumerState<MovieScreen> {
   void initState() {
     super.initState();
     ref.read(movieInfoProvider.notifier).loadMovie(widget.movieId);
-<<<<<<< HEAD
     ref.read(movieCastProvider.notifier).loadMovieCast(widget.movieId);
   }
 
@@ -48,15 +37,6 @@ class MovieScreenState extends ConsumerState<MovieScreen> {
     final Movie? movie = ref.watch(movieInfoProvider)[movieId];
     final List<Actor> cast = ref.watch(movieCastProvider)[movieId] ?? [];
     // ❌ Se elimina la variable videosAsync de aquí para usarla dentro de _TrailerButton
-=======
-    ref.read(movieCastProvider.notifier).loadMovieCast(widget.movieId); 
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final Movie? movie = ref.watch(movieInfoProvider)[widget.movieId];
-    final List<Actor> cast = ref.watch(movieCastProvider)[widget.movieId] ?? [];
->>>>>>> 12b3c65bda40581d2e39efcf101d45728f67431b
 
     if (movie == null) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
@@ -73,11 +53,7 @@ class MovieScreenState extends ConsumerState<MovieScreen> {
                 children: [
                   _MovieDetail(movie: movie, cast: cast),
                   // Sección de comentarios
-<<<<<<< HEAD
                   CommentsSection(movieId: movie.id.toString()),
-=======
-                  CommentsSection(movieId: movie.id.toString()), 
->>>>>>> 12b3c65bda40581d2e39efcf101d45728f67431b
                   const SizedBox(height: 50),
                 ],
               ),
@@ -90,7 +66,6 @@ class MovieScreenState extends ConsumerState<MovieScreen> {
   }
 }
 
-<<<<<<< HEAD
 Future<void> launchYouTubeVideo(String videoId) async {
   final url = Uri.parse("https://www.youtube.com/watch?v=$videoId");
 
@@ -109,13 +84,6 @@ class _MovieDetail extends StatelessWidget {
   final List<Actor> cast;
 
   const _MovieDetail({required this.movie, required this.cast});
-=======
-class _MovieDetail extends StatelessWidget {
-  final Movie movie;
-  final List<Actor> cast; 
-
-  const _MovieDetail({required this.movie, required this.cast}); 
->>>>>>> 12b3c65bda40581d2e39efcf101d45728f67431b
 
   @override
   Widget build(BuildContext context) {
@@ -130,7 +98,6 @@ class _MovieDetail extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-<<<<<<< HEAD
               // Póster de la película
               ClipRRect(
                 borderRadius: BorderRadius.circular(10),
@@ -138,16 +105,6 @@ class _MovieDetail extends StatelessWidget {
               ),
               const SizedBox(width: 10),
               // Título y descripción
-=======
-              ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: Image.network(
-                  movie.posterPath,
-                  width: size.width * 0.3,
-                ),
-              ),
-              const SizedBox(width: 10),
->>>>>>> 12b3c65bda40581d2e39efcf101d45728f67431b
               SizedBox(
                 width: (size.width - 40) * 0.7,
                 child: Column(
@@ -161,31 +118,23 @@ class _MovieDetail extends StatelessWidget {
                       textAlign: TextAlign.start,
                     ),
                     const SizedBox(height: 10),
-<<<<<<< HEAD
                     // Descripción de la película
                     Text(movie.overview),
                     // ❌ ELIMINADO: La lógica del botón estaba aquí, dentro de este Column limitado en ancho.
-=======
-                    Text(movie.overview),
->>>>>>> 12b3c65bda40581d2e39efcf101d45728f67431b
                   ],
                 ),
               ),
             ],
           ),
         ),
-<<<<<<< HEAD
 
         // ⭐ AÑADIDO: El botón del tráiler ahora va aquí, debajo del Row del póster y la descripción.
         _TrailerButton(movieId: movie.id.toString()),
 
-=======
->>>>>>> 12b3c65bda40581d2e39efcf101d45728f67431b
         Padding(
           padding: const EdgeInsets.all(10),
           child: Wrap(
             children: [
-<<<<<<< HEAD
               ...movie.genreIds.map(
                 (gender) => Container(
                   margin: const EdgeInsets.only(right: 10),
@@ -201,21 +150,6 @@ class _MovieDetail extends StatelessWidget {
                   ),
                 ),
               ),
-=======
-              ...movie.genreIds.map((gender) => Container(
-                    margin: const EdgeInsets.only(right: 10),
-                    child: Chip(
-                      label: Text(
-                        gender,
-                        style: const TextStyle(color: Colors.black87),
-                      ),
-                      backgroundColor: Colors.blueGrey[50],
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20), 
-                      ),
-                    ),
-                  )),
->>>>>>> 12b3c65bda40581d2e39efcf101d45728f67431b
             ],
           ),
         ),
@@ -223,14 +157,7 @@ class _MovieDetail extends StatelessWidget {
         if (cast.isNotEmpty) ...[
           Padding(
             padding: const EdgeInsets.all(10),
-<<<<<<< HEAD
             child: Text('Reparto Principal', style: textStyle.titleLarge),
-=======
-            child: Text(
-              'Reparto Principal',
-              style: textStyle.titleLarge,
-            ),
->>>>>>> 12b3c65bda40581d2e39efcf101d45728f67431b
           ),
           SizedBox(
             height: 180,
@@ -278,7 +205,6 @@ class _MovieDetail extends StatelessWidget {
   }
 }
 
-<<<<<<< HEAD
 // =========================================================================
 // NUEVO WIDGET PARA EL BOTÓN DEL TRÁILER (ConsumerWidget)
 // =========================================================================
@@ -328,19 +254,12 @@ class _TrailerButton extends ConsumerWidget {
 // WIDGET SLIVER APP BAR
 // =========================================================================
 class _CustomSliverAppBar extends ConsumerWidget {
-=======
-class _CustomSliverAppBar extends ConsumerWidget { 
->>>>>>> 12b3c65bda40581d2e39efcf101d45728f67431b
   final Movie movie;
 
   const _CustomSliverAppBar({required this.movie});
 
   @override
-<<<<<<< HEAD
   Widget build(BuildContext context, WidgetRef ref) {
-=======
-  Widget build(BuildContext context, WidgetRef ref) { 
->>>>>>> 12b3c65bda40581d2e39efcf101d45728f67431b
     // Escuchamos si es favorita
     final isFavoriteFuture = ref.watch(isFavoriteProvider(movie.id));
     final size = MediaQuery.of(context).size;
@@ -353,22 +272,15 @@ class _CustomSliverAppBar extends ConsumerWidget {
         IconButton(
           onPressed: () async {
             // 1. Toggle en DB
-<<<<<<< HEAD
             await ref
                 .read(localStorageRepositoryProvider)
                 .toggleFavorite(movie);
             ref.invalidate(favoriteMoviesProvider);
 
-=======
-            await ref.read(localStorageRepositoryProvider).toggleFavorite(movie);
-            ref.invalidate(favoriteMoviesProvider);
-            
->>>>>>> 12b3c65bda40581d2e39efcf101d45728f67431b
             // 3. Invalida el icono actual
             ref.invalidate(isFavoriteProvider(movie.id));
           },
           icon: isFavoriteFuture.when(
-<<<<<<< HEAD
             data: (isFavorite) => isFavorite
                 ? const Icon(Icons.favorite, color: Colors.red)
                 : const Icon(Icons.favorite_border),
@@ -376,15 +288,6 @@ class _CustomSliverAppBar extends ConsumerWidget {
             loading: () => const CircularProgressIndicator(strokeWidth: 2),
           ),
         ),
-=======
-            data: (isFavorite) => isFavorite 
-                ? const Icon(Icons.favorite, color: Colors.red) 
-                : const Icon(Icons.favorite_border),
-            error: (_, __) => const Icon(Icons.error_outline), 
-            loading: () => const CircularProgressIndicator(strokeWidth: 2), 
-          ),
-        )
->>>>>>> 12b3c65bda40581d2e39efcf101d45728f67431b
       ],
       flexibleSpace: FlexibleSpaceBar(
         titlePadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -408,19 +311,13 @@ class _CustomSliverAppBar extends ConsumerWidget {
                     end: Alignment.bottomCenter,
                     stops: [0.0, 0.2],
                     colors: [Colors.black54, Colors.transparent],
-<<<<<<< HEAD
                   ),
                 ),
-=======
-                  )
-                )
->>>>>>> 12b3c65bda40581d2e39efcf101d45728f67431b
               ),
             ),
             const SizedBox.expand(
               child: DecoratedBox(
                 decoration: BoxDecoration(
-<<<<<<< HEAD
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
@@ -428,13 +325,6 @@ class _CustomSliverAppBar extends ConsumerWidget {
                     colors: [Colors.transparent, Colors.black87],
                   ),
                 ),
-=======
-                    gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        stops: [0.8, 1.0],
-                        colors: [Colors.transparent, Colors.black87])),
->>>>>>> 12b3c65bda40581d2e39efcf101d45728f67431b
               ),
             ),
           ],
@@ -442,8 +332,4 @@ class _CustomSliverAppBar extends ConsumerWidget {
       ),
     );
   }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 12b3c65bda40581d2e39efcf101d45728f67431b
