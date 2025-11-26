@@ -4,7 +4,11 @@ publish_to: 'none'
 version: 0.1.0
 
 environment:
+<<<<<<< HEAD
   sdk: ^3.9.0
+=======
+  sdk: ^3.9.2
+>>>>>>> 12b3c65bda40581d2e39efcf101d45728f67431b
 
 dependencies:
   dio: ^5.9.0
@@ -20,8 +24,11 @@ dependencies:
   firebase_auth: ^6.1.2
   cloud_firestore: ^6.1.0
   google_sign_in: ^6.2.1
+<<<<<<< HEAD
   youtube_player_flutter: ^9.0.1
   url_launcher: ^6.3.0
+=======
+>>>>>>> 12b3c65bda40581d2e39efcf101d45728f67431b
 
 dev_dependencies:
   flutter_lints: ^5.0.0

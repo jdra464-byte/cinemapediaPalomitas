@@ -6,8 +6,11 @@ list(APPEND FLUTTER_PLUGIN_LIST
   cloud_firestore
   firebase_auth
   firebase_core
+<<<<<<< HEAD
   flutter_inappwebview_windows
   url_launcher_windows
+=======
+>>>>>>> 12b3c65bda40581d2e39efcf101d45728f67431b
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST

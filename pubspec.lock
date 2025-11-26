@@ -238,6 +238,7 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.0.0"
+<<<<<<< HEAD
   flutter_inappwebview:
     dependency: transitive
     description:
@@ -302,6 +303,8 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.6.0"
+=======
+>>>>>>> 12b3c65bda40581d2e39efcf101d45728f67431b
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -709,6 +712,7 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.4.0"
+<<<<<<< HEAD
   url_launcher:
     dependency: "direct main"
     description:
@@ -773,6 +777,8 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.5"
+=======
+>>>>>>> 12b3c65bda40581d2e39efcf101d45728f67431b
   vector_math:
     dependency: transitive
     description:
@@ -837,6 +843,7 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.3"
+<<<<<<< HEAD
   youtube_player_flutter:
     dependency: "direct main"
     description:
@@ -848,3 +855,8 @@ packages:
 sdks:
   dart: ">=3.9.0 <4.0.0"
   flutter: ">=3.35.0"
+=======
+sdks:
+  dart: ">=3.9.2 <4.0.0"
+  flutter: ">=3.29.0"
+>>>>>>> 12b3c65bda40581d2e39efcf101d45728f67431b

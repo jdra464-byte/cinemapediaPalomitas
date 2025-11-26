@@ -1,4 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<<<<<<< HEAD
 <queries>
     <intent>
         <action android:name="android.intent.action.VIEW" />
@@ -7,6 +8,8 @@
     </intent>
 </queries>
 <uses-permission android:name="android.permission.INTERNET"/>
+=======
+>>>>>>> 12b3c65bda40581d2e39efcf101d45728f67431b
     <application
         android:label="cinemapedia"
         android:name="${applicationName}"
