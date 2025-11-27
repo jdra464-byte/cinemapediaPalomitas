@@ -35,7 +35,7 @@ class CategoriesScreenState extends ConsumerState<CategoriesScreen> {
     final genres = ref.watch(genresProvider);
 
     return Scaffold(
-      appBar: CustomAppbar(),
+      appBar: const CustomAppbar(showBackButton: true, title: 'Categorías'),
       body: genres.isEmpty
           ? FullScreenLoader()
           : Padding(
@@ -46,8 +46,8 @@ class CategoriesScreenState extends ConsumerState<CategoriesScreen> {
                   Text(
                     'Categorías',
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   SizedBox(height: 16),
                   Expanded(

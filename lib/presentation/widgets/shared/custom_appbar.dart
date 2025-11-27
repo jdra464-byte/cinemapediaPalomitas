@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
-  const CustomAppbar({super.key});
+  final bool showBackButton;
+  final String? title;
+
+  const CustomAppbar({super.key, this.showBackButton = false, this.title});
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
@@ -10,6 +13,7 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     final titleStyle = Theme.of(context).textTheme.titleMedium;
+    final text = title ?? 'Cinemapedia';
 
     return SafeArea(
       bottom: false,
@@ -19,14 +23,22 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
           width: double.infinity,
           child: Row(
             children: [
-              Text('Cinemapedia', style: titleStyle),
-              Spacer(),
+              if (showBackButton)
+                IconButton(
+                  icon: const Icon(Icons.arrow_back_ios_new_rounded),
+                  onPressed: () {
+                    // Regresa a la pantalla anterior
+                    context.pop();
+                  },
+                ),
+              Text(text, style: titleStyle),
+              const Spacer(),
               IconButton(
                 onPressed: () {
-                  //FUNCIONALIDAD: Navegar a pantalla de búsqueda
+                  // Navegar a pantalla de búsqueda
                   context.push('/search');
                 },
-                icon: Icon(Icons.search_outlined),
+                icon: const Icon(Icons.search_outlined),
               ),
             ],
           ),

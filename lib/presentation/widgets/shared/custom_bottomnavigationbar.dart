@@ -11,7 +11,7 @@ class CustomBottomnavigationbar extends ConsumerWidget {
     return Consumer(
       builder: (context, ref, child) {
         final authState = ref.watch(authStateProvider);
-        
+
         return authState.when(
           data: (user) {
             // Si el usuario está autenticado, mostrar el bottom navigation con perfil
@@ -35,7 +35,7 @@ class _AuthenticatedBottomBar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = Theme.of(context).colorScheme;
-    
+
     return BottomNavigationBar(
       elevation: 0,
       backgroundColor: colors.surface,
@@ -66,13 +66,15 @@ class _AuthenticatedBottomBar extends ConsumerWidget {
         ),
       ],
       onTap: (index) {
-        if (index == 1) { // Índice de "Categorias"
+        if (index == 1) {
+          // Índice de "Categorias"
           context.push('/categories');
         }
-        if (index == 2) { 
-        context.go('/favorites');
-      }
-        if (index == 3) { // Índice del item "Mi Perfil"
+        if (index == 2) {
+          context.go('/favorites');
+        }
+        if (index == 3) {
+          // Índice del item "Mi Perfil"
           _showProfileMenu(context, ref);
         }
       },
@@ -88,31 +90,34 @@ class _AuthenticatedBottomBar extends ConsumerWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               ListTile(
-                leading: Icon(Icons.person),
-                title: Text('Mi Perfil'),
+                leading: const Icon(Icons.person),
+                title: const Text('Mi Perfil'),
                 onTap: () {
                   Navigator.pop(context);
-                  // Aquí puedes navegar a una pantalla de perfil si la creas
+                  context.push('/profile');
                 },
               ),
               ListTile(
-                leading: Icon(Icons.settings),
-                title: Text('Ajustes'),
+                leading: const Icon(Icons.settings),
+                title: const Text('Ajustes'),
                 onTap: () {
                   Navigator.pop(context);
-                  // Aquí puedes navegar a una pantalla de ajustes si la creas
+                  context.push('/settings');
                 },
               ),
-              Divider(),
+              const Divider(),
               ListTile(
-                leading: Icon(Icons.logout, color: Colors.red),
-                title: Text('Cerrar Sesión', style: TextStyle(color: Colors.red)),
+                leading: const Icon(Icons.logout, color: Colors.red),
+                title: const Text(
+                  'Cerrar Sesión',
+                  style: TextStyle(color: Colors.red),
+                ),
                 onTap: () {
                   Navigator.pop(context);
                   _showLogoutConfirmation(context, ref);
                 },
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
             ],
           ),
         );
@@ -137,9 +142,7 @@ class _AuthenticatedBottomBar extends ConsumerWidget {
               ref.read(authProvider.notifier).signOut();
               context.go('/login');
             },
-            style: FilledButton.styleFrom(
-              backgroundColor: Colors.red,
-            ),
+            style: FilledButton.styleFrom(backgroundColor: Colors.red),
             child: Text('Cerrar Sesión'),
           ),
         ],
@@ -154,7 +157,7 @@ class _UnauthenticatedBottomBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
-    
+
     return BottomNavigationBar(
       elevation: 0,
       backgroundColor: colors.surface,

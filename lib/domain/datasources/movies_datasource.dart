@@ -1,9 +1,6 @@
 import 'package:cinemapedia/domain/entities/actor.dart';
 import 'package:cinemapedia/domain/entities/genre.dart';
-<<<<<<< HEAD
 import 'package:cinemapedia/domain/entities/movie_video.dart';
-=======
->>>>>>> 12b3c65bda40581d2e39efcf101d45728f67431b
 import 'package:cinemapedia/domain/entities/movies.dart';
 import 'package:cinemapedia/domain/entities/search_result.dart';
 
@@ -25,9 +22,6 @@ abstract class MoviesDatasource {
   Future<List<Genre>> getMovieGenres();
 
   Future<List<Movie>> getMoviesByGenre(int genreId, {int page = 1});
-<<<<<<< HEAD
 
   Future<List<MovieVideo>> getMovieVideos(String movieId);
-=======
->>>>>>> 12b3c65bda40581d2e39efcf101d45728f67431b
 }

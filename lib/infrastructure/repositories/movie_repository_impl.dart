@@ -1,17 +1,10 @@
 import 'package:cinemapedia/domain/datasources/movies_datasource.dart';
 import 'package:cinemapedia/domain/entities/actor.dart';
-<<<<<<< HEAD
 import 'package:cinemapedia/domain/entities/movie_video.dart';
 import 'package:cinemapedia/domain/entities/movies.dart';
 import 'package:cinemapedia/domain/entities/search_result.dart';
 import 'package:cinemapedia/domain/repositories/movies_repository.dart';
 import '../../domain/entities/genre.dart';
-=======
-import 'package:cinemapedia/domain/entities/movies.dart';
-import 'package:cinemapedia/domain/entities/search_result.dart';
-import 'package:cinemapedia/domain/repositories/movies_repository.dart';
-import '../../domain/entities/genre.dart'; 
->>>>>>> 12b3c65bda40581d2e39efcf101d45728f67431b
 
 class MovieRepositoryImpl extends MoviesRepository {
   final MoviesDatasource datasource;
@@ -43,7 +36,6 @@ class MovieRepositoryImpl extends MoviesRepository {
     return datasource.getMovieById(id);
   }
 
-<<<<<<< HEAD
   @override
   Future<List<Actor>> getMovieCast(String movieId) {
     return datasource.getMovieCast(movieId);
@@ -55,17 +47,6 @@ class MovieRepositoryImpl extends MoviesRepository {
   }
 
   // ✅ NUEVO: Obtener géneros
-=======
-   @override
-  Future<List<Actor>> getMovieCast(String movieId) {
-    return datasource.getMovieCast(movieId);
-  }
-   @override
-  Future<List<SearchResult>> searchMovies(String query, {int page = 1}) {
-    return datasource.searchMovies(query, page: page);
-  }
-    // ✅ NUEVO: Obtener géneros
->>>>>>> 12b3c65bda40581d2e39efcf101d45728f67431b
   @override
   Future<List<Genre>> getMovieGenres() {
     return datasource.getMovieGenres();
@@ -76,12 +57,9 @@ class MovieRepositoryImpl extends MoviesRepository {
   Future<List<Movie>> getMoviesByGenre(int genreId, {int page = 1}) {
     return datasource.getMoviesByGenre(genreId, page: page);
   }
-<<<<<<< HEAD
 
   @override
   Future<List<MovieVideo>> getMovieVideos(String movieId) {
     return datasource.getMovieVideos(movieId);
   }
-=======
->>>>>>> 12b3c65bda40581d2e39efcf101d45728f67431b
 }
