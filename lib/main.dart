@@ -24,7 +24,7 @@ Future<void> main() async {
       print("ℹ️ Firebase ya estaba inicializado");
     }
   } catch (e) {
-    // Si falla 
+    // Si falla   
     print("⚠️ Error controlado de Firebase (La app continuará): $e");
   }
 

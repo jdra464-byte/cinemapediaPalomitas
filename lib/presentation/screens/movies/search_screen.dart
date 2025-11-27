@@ -45,7 +45,7 @@ class SearchScreenState extends ConsumerState<SearchScreen> {
 
   void _onQueryChanged(String query) {
     ref.read(searchQueryProvider.notifier).state = query;
-    
+
     if (query.length >= 3) {
       _isInitialLoad = false;
       ref.read(searchResultsProvider.notifier).searchMoviesByQuery(query);
@@ -60,7 +60,11 @@ class SearchScreenState extends ConsumerState<SearchScreen> {
     final searchQuery = ref.watch(searchQueryProvider);
 
     return Scaffold(
-      appBar: CustomAppbar(),
+      appBar: const CustomAppbar(
+        showBackButton: true,
+        showSearchIcon: false,
+        title: 'Buscar',
+      ),
       body: SafeArea(
         child: Column(
           children: [
@@ -93,9 +97,7 @@ class SearchScreenState extends ConsumerState<SearchScreen> {
             ),
 
             // Resultados o estado vacío
-            Expanded(
-              child: _buildContent(searchResults, searchQuery),
-            ),
+            Expanded(child: _buildContent(searchResults, searchQuery)),
           ],
         ),
       ),
@@ -140,9 +142,9 @@ class SearchScreenState extends ConsumerState<SearchScreen> {
           SizedBox(height: 16),
           Text(
             message,
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: Colors.grey[600],
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyLarge?.copyWith(color: Colors.grey[600]),
             textAlign: TextAlign.center,
           ),
         ],

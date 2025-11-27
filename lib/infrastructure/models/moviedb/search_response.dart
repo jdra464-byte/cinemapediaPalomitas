@@ -12,12 +12,13 @@ class SearchResponse {
   });
 
   factory SearchResponse.fromJson(Map<String, dynamic> json) => SearchResponse(
-        page: json["page"],
-        results: List<SearchMovieDB>.from(
-            json["results"].map((x) => SearchMovieDB.fromJson(x))),
-        totalPages: json["total_pages"],
-        totalResults: json["total_results"],
-      );
+    page: json["page"],
+    results: List<SearchMovieDB>.from(
+      json["results"].map((x) => SearchMovieDB.fromJson(x)),
+    ),
+    totalPages: json["total_pages"],
+    totalResults: json["total_results"],
+  );
 }
 
 class SearchMovieDB {
@@ -31,6 +32,7 @@ class SearchMovieDB {
   final String overview;
   final double popularity;
   final String? posterPath;
+  final String? profilePath; // ✅ NUEVO
   final String? releaseDate;
   final String title;
   final bool? video;
@@ -48,6 +50,7 @@ class SearchMovieDB {
     required this.overview,
     required this.popularity,
     this.posterPath,
+    required this.profilePath, // ✅ NUEVO
     this.releaseDate,
     required this.title,
     this.video,
@@ -56,22 +59,23 @@ class SearchMovieDB {
   });
 
   factory SearchMovieDB.fromJson(Map<String, dynamic> json) => SearchMovieDB(
-        adult: json["adult"],
-        backdropPath: json["backdrop_path"],
-        genreIds: json["genre_ids"] == null
-            ? []
-            : List<int>.from(json["genre_ids"]!.map((x) => x)),
-        id: json["id"],
-        mediaType: json["media_type"],
-        originalLanguage: json["original_language"],
-        originalTitle: json["original_title"],
-        overview: json["overview"] ?? '',
-        popularity: json["popularity"]?.toDouble() ?? 0.0,
-        posterPath: json["poster_path"],
-        releaseDate: json["release_date"],
-        title: json["title"] ?? json["name"] ?? 'Sin título',
-        video: json["video"],
-        voteAverage: json["vote_average"]?.toDouble() ?? 0.0,
-        voteCount: json["vote_count"] ?? 0,
-      );
+    adult: json["adult"],
+    backdropPath: json["backdrop_path"],
+    genreIds: json["genre_ids"] == null
+        ? []
+        : List<int>.from(json["genre_ids"]!.map((x) => x)),
+    id: json["id"],
+    mediaType: json["media_type"],
+    originalLanguage: json["original_language"],
+    originalTitle: json["original_title"],
+    overview: json["overview"] ?? '',
+    popularity: json["popularity"]?.toDouble() ?? 0.0,
+    posterPath: json["poster_path"],
+    profilePath: json["profile_path"], // ✅ NUEVO
+    releaseDate: json["release_date"],
+    title: json["title"] ?? json["name"] ?? 'Sin título',
+    video: json["video"],
+    voteAverage: json["vote_average"]?.toDouble() ?? 0.0,
+    voteCount: json["vote_count"] ?? 0,
+  );
 }

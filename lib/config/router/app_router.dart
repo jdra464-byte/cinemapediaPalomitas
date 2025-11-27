@@ -23,6 +23,25 @@ final appRouter = GoRouter(
         return MovieScreen(movieId: movieId);
       },
     ),
+
+    // ✅ NUEVA RUTA ACTOR
+    GoRoute(
+      path: '/actor/:id',
+      name: ActorScreen.name,
+      builder: (context, state) {
+        final actorId = state.pathParameters['id'] ?? '0';
+        final extra = state.extra as Map<String, dynamic>?;
+
+        final actorName = extra?['name'] as String? ?? 'Actor';
+        final profilePath = extra?['profilePath'] as String?;
+
+        return ActorScreen(
+          actorId: actorId,
+          actorName: actorName,
+          profilePath: profilePath,
+        );
+      },
+    ),
     GoRoute(
       path: '/login',
       name: LoginScreen.name,

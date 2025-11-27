@@ -3,9 +3,15 @@ import 'package:go_router/go_router.dart';
 
 class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
   final bool showBackButton;
+  final bool showSearchIcon;
   final String? title;
 
-  const CustomAppbar({super.key, this.showBackButton = false, this.title});
+  const CustomAppbar({
+    super.key,
+    this.showBackButton = false,
+    this.showSearchIcon = true,
+    this.title,
+  });
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
@@ -26,20 +32,18 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
               if (showBackButton)
                 IconButton(
                   icon: const Icon(Icons.arrow_back_ios_new_rounded),
-                  onPressed: () {
-                    // Regresa a la pantalla anterior
-                    context.pop();
-                  },
+                  onPressed: () => context.pop(),
                 ),
               Text(text, style: titleStyle),
               const Spacer(),
-              IconButton(
-                onPressed: () {
-                  // Navegar a pantalla de búsqueda
-                  context.push('/search');
-                },
-                icon: const Icon(Icons.search_outlined),
-              ),
+              if (showSearchIcon)
+                IconButton(
+                  onPressed: () {
+                    // Navegar a pantalla de búsqueda
+                    context.push('/search');
+                  },
+                  icon: const Icon(Icons.search_outlined),
+                ),
             ],
           ),
         ),

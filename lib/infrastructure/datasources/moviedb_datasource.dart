@@ -15,6 +15,7 @@ import 'package:cinemapedia/infrastructure/models/moviedb/moviedb_response.dart'
 import 'package:cinemapedia/infrastructure/models/moviedb/moviedb_videos_response.dart';
 import 'package:cinemapedia/infrastructure/models/moviedb/search_response.dart';
 import 'package:dio/dio.dart';
+import 'package:cinemapedia/infrastructure/models/moviedb/movie_moviedb.dart';
 
 class MoviedbDatasource extends MoviesDatasource {
   final dio = Dio(
@@ -116,6 +117,7 @@ class MoviedbDatasource extends MoviesDatasource {
     return actors;
   }
 
+  // ✅ MÉTODO MODIFICADO PARA INCLUIR ACTORES
   @override
   Future<List<SearchResult>> searchMovies(String query, {int page = 1}) async {
     if (query.isEmpty) return [];
@@ -131,21 +133,37 @@ class MoviedbDatasource extends MoviesDatasource {
 
     final searchResponse = SearchResponse.fromJson(response.data);
 
-    final List<SearchResult> results = searchResponse.results
-        .where((item) => item.mediaType == 'movie' || item.mediaType == 'tv')
-        .map(
-          (item) => SearchResult(
-            id: item.id,
-            title: item.title,
-            posterPath: item.posterPath,
-            backdropPath: item.backdropPath,
-            mediaType: item.mediaType ?? 'movie',
-            voteAverage: item.voteAverage,
-            releaseDate: item.releaseDate,
-            overview: item.overview,
-          ),
-        )
-        .toList();
+    final List<SearchResult> results = searchResponse.results.map((item) {
+      final mediaType = item.mediaType ?? 'movie';
+
+      // ✅ Resultado de tipo PERSON (actor)
+      if (mediaType == 'person') {
+        return SearchResult(
+          id: item.id,
+          title: item.title, // La entidad maneja la lógica de name/title
+          posterPath:
+              item.posterPath ??
+              item.profilePath, // Usar profilePath si posterPath es null
+          backdropPath: item.backdropPath,
+          mediaType: mediaType,
+          voteAverage: null, // No aplica
+          releaseDate: null, // No aplica
+          overview: item.overview,
+        );
+      }
+
+      // ✅ Películas y series
+      return SearchResult(
+        id: item.id,
+        title: item.title,
+        posterPath: item.posterPath,
+        backdropPath: item.backdropPath,
+        mediaType: mediaType,
+        voteAverage: item.voteAverage,
+        releaseDate: item.releaseDate,
+        overview: item.overview,
+      );
+    }).toList();
 
     return results;
   }
@@ -183,6 +201,42 @@ class MoviedbDatasource extends MoviesDatasource {
     }
 
     return _jsonToMovies(response.data);
+  }
+
+  @override
+  Future<List<Movie>> getMoviesByActor(String actorId) async {
+    final response = await dio.get('/person/$actorId/movie_credits');
+
+    if (response.statusCode != 200) {
+      throw Exception('Error al obtener películas del actor');
+    }
+
+    final List<dynamic> cast = response.data['cast'] ?? [];
+
+    final List<Movie> movies = cast
+        // Filtrar solo películas con póster válido
+        .where(
+          (item) =>
+              item['poster_path'] != null &&
+              (item['poster_path'] as String).isNotEmpty,
+        )
+        .map<Movie>((item) {
+          // Ajustar datos para que MovieMovieDB.fromJson no truene
+          final Map<String, dynamic> json = Map<String, dynamic>.from(item);
+
+          json['genre_ids'] ??= <int>[];
+          if (json['release_date'] == null ||
+              (json['release_date'] as String).isEmpty) {
+            // Valor por defecto si no trae fecha
+            json['release_date'] = '1900-01-01';
+          }
+
+          final movieDb = MovieMovieDB.fromJson(json);
+          return MovieMapper.movieDBToEntity(movieDb);
+        })
+        .toList();
+
+    return movies;
   }
 
   @override

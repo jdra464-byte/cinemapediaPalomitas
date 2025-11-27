@@ -5,3 +5,4 @@ export 'package:cinemapedia/presentation/screens/auth/register_screen.dart';
 export 'package:cinemapedia/presentation/screens/movies/favorites_screen.dart';
 export 'package:cinemapedia/presentation/screens/profile/profile_screen.dart';
 export 'package:cinemapedia/presentation/screens/settings/settings_screen.dart';
+export 'package:cinemapedia/presentation/screens/movies/actor_screen.dart';
